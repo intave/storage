@@ -4,5 +4,5 @@ import de.jpx3.intave.access.player.storage.StorageGateway
 import java.util.concurrent.TimeUnit
 
 interface CustomStorageGateway : StorageGateway {
-  fun clearEntriesOlderThan(value: Long, unit: TimeUnit)
+    fun clearEntriesOlderThan(value: Long, unit: TimeUnit)
 }

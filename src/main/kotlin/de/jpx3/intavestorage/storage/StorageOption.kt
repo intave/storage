@@ -5,14 +5,14 @@ import de.jpx3.intave.access.player.storage.StorageGateway
 import org.bukkit.configuration.ConfigurationSection
 
 enum class StorageOption(
-  private val resolve: (ConfigurationSection) -> StorageGateway
+    private val resolve: (ConfigurationSection) -> StorageGateway
 ) {
-  NONE({EmptyStorageGateway()}),
-  FILE({config -> FileStorage(config)})
+    NONE({ EmptyStorageGateway() }),
+    FILE({ config -> FileStorage(config) })
 
-  ;
+    ;
 
-  fun storageGatewayFrom(configuration: ConfigurationSection): StorageGateway {
-    return resolve.invoke(configuration)
-  }
+    fun storageGatewayFrom(configuration: ConfigurationSection): StorageGateway {
+        return resolve(configuration)
+    }
 }

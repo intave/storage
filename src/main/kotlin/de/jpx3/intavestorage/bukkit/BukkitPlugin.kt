@@ -8,38 +8,39 @@ import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 
 class BukkitPlugin : JavaPlugin() {
-  private var storage: IntaveStorage = IntaveStorage()
+    private var storage: IntaveStorage = IntaveStorage()
 
-  override fun onEnable() {
-    var storageOption = storageOption()
-    storage.enable(storageOption)
-  }
-
-  private fun storageOption(): StorageGateway {
-    createDataFolder()
-
-    val configFile = File(dataFolder, "config.yml")
-    if (!configFile.exists()) {
-      saveResource("config.yml", false)
+    override fun onEnable() {
+        val storageOption = storageGateway()
+        storage.enable(storageOption)
     }
-    val configuration = YamlConfiguration()
-    configuration.load(configFile)
 
-    val storageOptionName = configuration.getString("storageOption", "NONE")
-    val storageOption = StorageOption.valueOf(storageOptionName?.uppercase() ?: "NONE")
-    val configurationSection = configuration.getConfigurationSection("${storageOptionName?.lowercase()}")!!
+    private fun storageGateway(): StorageGateway {
+        createDataFolder()
 
-    return storageOption.storageGatewayFrom(configurationSection)
-  }
+        val configFile = File(dataFolder, "config.yml")
+        if (!configFile.exists()) {
+            saveResource("config.yml", false)
+        }
+        
+        with(YamlConfiguration()) {
+            load(configFile)
 
-  fun createDataFolder() {
-    val dataFolder: File = dataFolder
-    if (!(dataFolder.exists() || dataFolder.mkdirs())) {
-      error("Failed to create datafolder")
+            val storageOptionName = getString("storageOption", "NONE")
+            val storageOption = StorageOption.valueOf(storageOptionName?.uppercase() ?: "NONE")
+            val configurationSection = getConfigurationSection("${storageOptionName?.lowercase()}")!!
+
+            return storageOption.storageGatewayFrom(configurationSection)
+        }
     }
-  }
 
-  override fun onDisable() {
-    storage.disable()
-  }
+    private fun createDataFolder() {
+        if (!(dataFolder.exists() || dataFolder.mkdirs())) {
+            error("Failed to create datafolder")
+        }
+    }
+
+    override fun onDisable() {
+        storage.disable()
+    }
 }
