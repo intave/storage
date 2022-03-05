@@ -8,8 +8,7 @@ import de.jpx3.intavestorage.storage.StorageOption
 class IntaveStorage {
   private var storage: StorageGateway? = null
 
-  fun enable(storageOption: StorageOption) {
-    storage = storageOption.gateway
+  fun enable(storageGateway: StorageGateway) {
     intaveAccess().setStorageGateway(storage)
   }
 

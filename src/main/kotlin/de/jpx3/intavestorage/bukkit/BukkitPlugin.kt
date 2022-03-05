@@ -1,5 +1,6 @@
 package de.jpx3.intavestorage.bukkit
 
+import de.jpx3.intave.access.player.storage.StorageGateway
 import de.jpx3.intavestorage.IntaveStorage
 import de.jpx3.intavestorage.storage.StorageOption
 import org.bukkit.configuration.file.YamlConfiguration
@@ -10,10 +11,11 @@ class BukkitPlugin : JavaPlugin() {
   private var storage: IntaveStorage = IntaveStorage()
 
   override fun onEnable() {
-    storage.enable(storageOption())
+    var storageOption = storageOption()
+    storage.enable(storageOption)
   }
 
-  private fun storageOption(): StorageOption {
+  private fun storageOption(): StorageGateway {
     createDataFolder()
 
     val configFile = File(dataFolder, "config.yml")
@@ -22,8 +24,12 @@ class BukkitPlugin : JavaPlugin() {
     }
     val configuration = YamlConfiguration()
     configuration.load(configFile)
-    val storageSelection = configuration.getString("storageOption", "NONE")
-    return StorageOption.valueOf(storageSelection?.uppercase() ?: "NONE")
+
+    val storageOptionName = configuration.getString("storageOption", "NONE")
+    val storageOption = StorageOption.valueOf(storageOptionName?.uppercase() ?: "NONE")
+    val configurationSection = configuration.getConfigurationSection("${storageOptionName?.lowercase()}")!!
+
+    return storageOption.storageGatewayFrom(configurationSection)
   }
 
   fun createDataFolder() {
