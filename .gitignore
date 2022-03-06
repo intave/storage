@@ -1,0 +1,16 @@
+# Ignore everything
+/*
+
+# Whitelist gradle
+!gradle/
+!build.gradle
+!gradle.properties
+!gradlew
+!gradlew.bat
+!settings.gradle
+
+# Whitelist source
+!libs/
+!src/
+!.gitignore
+!README.md
