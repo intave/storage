@@ -6,6 +6,7 @@ import java.util.UUID
 import java.util.concurrent.TimeUnit
 import java.util.function.Consumer
 
+@Suppress("SqlNoDataSourceInspection")
 class MySQLStorage : CustomStorageGateway {
     private val connection: Connection = TODO()
 
@@ -20,12 +21,18 @@ class MySQLStorage : CustomStorageGateway {
     }
 
     override fun clearEntriesOlderThan(value: Long, unit: TimeUnit) {
+        val preparedStatement =
+            connection.prepareStatement(
+                "DELETE FROM intave_storage WHERE " +
+                    "time < ${System.currentTimeMillis() - unit.toMillis(value)}"
+            )
+        preparedStatement.execute()
     }
 
     override fun requestStorage(uuid: UUID, consumer: Consumer<ByteBuffer>) {
         // Query with the given uuid
-        val preparedStatement = connection.prepareStatement("SELECT * FROM intave_storage WHERE id = ?")
-        preparedStatement.setString(1, uuid.toString())
+        val preparedStatement =
+            connection.prepareStatement("SELECT * FROM intave_storage WHERE id = $uuid")
         val resultSet = preparedStatement.executeQuery()
         if (!resultSet.next()) {
             // Accept with empty array as no entry could be found
