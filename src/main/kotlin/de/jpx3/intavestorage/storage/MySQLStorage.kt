@@ -1,5 +1,6 @@
 package de.jpx3.intavestorage.storage
 
+import java.io.ByteArrayInputStream
 import java.nio.ByteBuffer
 import java.sql.Connection
 import java.util.UUID
@@ -16,7 +17,13 @@ class MySQLStorage : CustomStorageGateway {
 
     private fun prepareTables() {
         connection.autoCommit = false
-        connection.prepareStatement("CREATE TABLE IF NOT EXISTS intave_storage (id VARCHAR(36) NOT NULL, bytes MEDIUMBLOB NOT NULL, time LONG)")
+        connection.prepareStatement(
+            "CREATE TABLE IF NOT EXISTS intave_storage (" +
+                "    id VARCHAR(36) PRIMARY KEY NOT NULL," +
+                "    bytes MEDIUMBLOB NOT NULL," +
+                "    time LONG NOT NULL" +
+                ")"
+        )
         connection.commit()
     }
 
@@ -44,5 +51,15 @@ class MySQLStorage : CustomStorageGateway {
     }
 
     override fun saveStorage(uuid: UUID, buffer: ByteBuffer) {
+        val blob = ByteArrayInputStream(buffer.array())
+        val statement = connection.prepareStatement(
+            "INSERT OR REPLACE INTO intave_storage VALUES(" +
+                "    $uuid," +
+                "    ?," +
+                "    ${System.currentTimeMillis()}" +
+                ")"
+        )
+        statement.setBlob(1, blob)
+        statement.executeQuery()
     }
 }

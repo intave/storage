@@ -10,7 +10,6 @@ import java.util.concurrent.TimeUnit
 import java.util.function.Consumer
 
 class FileStorage(config: ConfigurationSection) : CustomStorageGateway {
-
     override fun requestStorage(id: UUID, consumer: Consumer<ByteBuffer>) {
         val file = fileOf(id)
         val bytes = FileInputStream(file).use(FileInputStream::readBytes)
