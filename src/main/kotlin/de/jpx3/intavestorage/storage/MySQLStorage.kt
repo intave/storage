@@ -16,50 +16,62 @@ class MySQLStorage : CustomStorageGateway {
     }
 
     private fun prepareTables() {
-        connection.autoCommit = false
-        connection.prepareStatement(
-            "CREATE TABLE IF NOT EXISTS intave_storage (" +
-                "    id VARCHAR(36) PRIMARY KEY NOT NULL," +
-                "    bytes MEDIUMBLOB NOT NULL," +
-                "    time LONG NOT NULL" +
-                ")"
+        connection.createStatement().execute(
+            """
+            CREATE TABLE IF NOT EXISTS intave_storage (
+                id VARCHAR(36) PRIMARY KEY NOT NULL,
+                data MEDIUMBLOB NOT NULL,
+                last_used LONG NOT NULL
+            )
+            """
         )
-        connection.commit()
     }
 
     override fun clearEntriesOlderThan(value: Long, unit: TimeUnit) {
-        val preparedStatement =
-            connection.prepareStatement(
-                "DELETE FROM intave_storage WHERE " +
-                    "time < ${System.currentTimeMillis() - unit.toMillis(value)}"
-            )
-        preparedStatement.execute()
+        connection.prepareStatement(
+            """
+            DELETE FROM intave_storage
+            WHERE last_used < ${System.currentTimeMillis() - unit.toMillis(value)}
+            """
+        ).execute()
     }
 
     override fun requestStorage(uuid: UUID, consumer: Consumer<ByteBuffer>) {
-        // Query with the given uuid
-        val preparedStatement =
-            connection.prepareStatement("SELECT * FROM intave_storage WHERE id = $uuid")
-        val resultSet = preparedStatement.executeQuery()
-        if (!resultSet.next()) {
-            // Accept with empty array as no entry could be found
-            consumer.accept(ByteBuffer.wrap(ByteArray(0)))
-            return
+        connection.prepareStatement(
+            """
+            SELECT data
+            FROM intave_storage
+            WHERE id = ?
+            """
+        ).use {
+            it.setString(1, uuid.toString())
+            val result = it.executeQuery()
+            val bytes = if (result.next()) {
+                val blob = result.getBlob("data")
+                blob.getBytes(1, blob.length().toInt())
+            } else {
+                ByteArray(0)
+            }
+            consumer.accept(ByteBuffer.wrap(bytes))
         }
-        // Accept with the bytes of the entry
-        consumer.accept(ByteBuffer.wrap(resultSet.getBytes("bytes")))
     }
 
     override fun saveStorage(uuid: UUID, buffer: ByteBuffer) {
         val blob = ByteArrayInputStream(buffer.array())
-        val statement = connection.prepareStatement(
-            "INSERT OR REPLACE INTO intave_storage VALUES(" +
-                "    $uuid," +
-                "    ?," +
-                "    ${System.currentTimeMillis()}" +
-                ")"
-        )
-        statement.setBlob(1, blob)
-        statement.executeQuery()
+        connection.prepareStatement(
+            """
+            INSERT INTO intave_storage
+            VALUES (?, ?, ?) AS ins
+            ON DUPLICATE KEY
+                UPDATE
+                    intave_storage.data = ins.data,
+                    intave_storage.last_used = ins.last_used
+            """
+        ).use {
+            it.setString(1, uuid.toString())
+            it.setBlob(2, blob)
+            it.setLong(3, System.currentTimeMillis())
+            it.executeQuery()
+        }
     }
 }

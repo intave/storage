@@ -16,7 +16,6 @@ repositories {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib"
     compileOnly 'org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT'
     compileOnly fileTree(dir: 'libs/', include: ['*.jar'])
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
