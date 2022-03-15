@@ -8,7 +8,8 @@ enum class StorageOption(
     private val resolve: (ConfigurationSection) -> StorageGateway
 ) {
     NONE({ EmptyStorageGateway() }),
-    FILE({ config -> FileStorage(config) })
+    FILE({ config -> FileStorage(config) }),
+    MY_SQL({ MySQLStorage() })
 
     ;
 
