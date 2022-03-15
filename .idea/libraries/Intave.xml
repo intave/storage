@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="Intave">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../Intave-14/build/libs/Intave.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
