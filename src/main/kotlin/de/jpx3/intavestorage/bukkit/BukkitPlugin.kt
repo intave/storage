@@ -22,7 +22,6 @@ class BukkitPlugin : JavaPlugin() {
         if (!configFile.exists()) {
             saveResource("config.yml", false)
         }
-        
         with(YamlConfiguration()) {
             load(configFile)
 
