@@ -3,11 +3,11 @@
 
 # Whitelist gradle
 !gradle/
-!build.gradle
+!build.gradle.kts
 !gradle.properties
 !gradlew
 !gradlew.bat
-!settings.gradle
+!settings.gradle.kts
 
 # Whitelist source
 !libs/
