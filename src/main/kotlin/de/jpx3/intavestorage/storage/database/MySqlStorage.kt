@@ -1,15 +1,15 @@
 package de.jpx3.intavestorage.storage.database
 
+import com.mysql.cj.jdbc.Driver
 import org.bukkit.configuration.ConfigurationSection
-import org.postgresql.Driver
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.PreparedStatement
 
 @Suppress("SqlNoDataSourceInspection")
-class PostgreSqlStorage(config: ConfigurationSection) : DatabaseStorage {
+class MySqlStorage(config: ConfigurationSection) : DatabaseStorage {
     private val connection: Connection = run {
-        val url = "jdbc:postgresql://${config.getString("host")}/${config.getString("database")}"
+        val url = "jdbc:mysql://${config.getString("host")}/${config.getString("database")}"
         val user = config.getString("user")
         val password = config.getString("password") as String
         DriverManager.registerDriver(Driver())
@@ -23,9 +23,9 @@ class PostgreSqlStorage(config: ConfigurationSection) : DatabaseStorage {
     override fun prepareTable() {
         connection.createStatement().execute(
             """
-            CREATE TABLE IF NOT EXISTS intave_storage(
+            CREATE TABLE IF NOT EXISTS intave_storage (
                 id CHAR(36) PRIMARY KEY NOT NULL,
-                data BYTEA NOT NULL,
+                data MEDIUMBLOB NOT NULL,
                 last_used BIGINT NOT NULL
             )
             """
@@ -46,10 +46,11 @@ class PostgreSqlStorage(config: ConfigurationSection) : DatabaseStorage {
         return connection.prepareStatement(
             """
             INSERT INTO intave_storage
-            VALUES(?, ?, ?)
-            ON CONFLICT(id) DO UPDATE SET
-                data = EXCLUDED.data,
-                last_used = EXCLUDED.last_used
+            VALUES(?, ?, ?) as excluded
+            ON DUPLICATE KEY UPDATE 
+                data = excluded.data,
+                last_used = excluded.last_used
+
             """
         )
     }

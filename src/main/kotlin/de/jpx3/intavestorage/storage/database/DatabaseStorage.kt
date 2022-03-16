@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit
 import java.util.function.Consumer
 
 interface DatabaseStorage : ExpiringStorageGateway {
-    fun prepareSchema()
+    fun prepareTable()
 
     override fun requestStorage(id: UUID, lazyReturn: Consumer<ByteBuffer>) {
         requestStorageQuery().use {

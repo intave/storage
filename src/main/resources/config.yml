@@ -1,4 +1,4 @@
-# May be either NONE, FILE or POSTGRESQL
+# May be either NONE, FILE, POSTGRESQL or MYSQL
 storage-type: NONE
 
 none:
@@ -7,6 +7,12 @@ file:
   expire:
 
 postgresql:
+  host: localhost
+  database: testing
+  user: user
+  password: password
+
+mysql:
   host: localhost
   database: testing
   user: user
