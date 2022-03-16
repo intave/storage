@@ -2,6 +2,7 @@ package de.jpx3.intavestorage.storage
 
 import de.jpx3.intave.access.player.storage.EmptyStorageGateway
 import de.jpx3.intave.access.player.storage.StorageGateway
+import de.jpx3.intavestorage.storage.database.PostgreSqlStorage
 import org.bukkit.configuration.ConfigurationSection
 
 enum class StorageType(
