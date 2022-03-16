@@ -1,27 +1,35 @@
 package de.jpx3.intavestorage.storage
 
-import java.io.ByteArrayInputStream
+import org.bukkit.configuration.ConfigurationSection
+import org.postgresql.Driver
 import java.nio.ByteBuffer
 import java.sql.Connection
+import java.sql.DriverManager
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 import java.util.function.Consumer
 
 @Suppress("SqlNoDataSourceInspection")
-class MySQLStorage : CustomStorageGateway {
-    private val connection: Connection = TODO()
-
-    init {
-        prepareTables()
+class PostgreSqlStorage(config: ConfigurationSection) : CustomStorageGateway {
+    private val connection: Connection = run {
+        val url = "jdbc:postgresql://${config.getString("host")}/${config.getString("database")}"
+        val user = config.getString("user")
+        val password = config.getString("password") as String
+        DriverManager.registerDriver(Driver())
+        DriverManager.getConnection(url, user, password)
     }
 
-    private fun prepareTables() {
+    init {
+        prepareSchema()
+    }
+
+    private fun prepareSchema() {
         connection.createStatement().execute(
             """
-            CREATE TABLE IF NOT EXISTS intave_storage (
-                id VARCHAR(36) PRIMARY KEY NOT NULL,
-                data MEDIUMBLOB NOT NULL,
-                last_used LONG NOT NULL
+            CREATE TABLE IF NOT EXISTS intave_storage(
+                id CHAR(36) PRIMARY KEY NOT NULL,
+                data BYTEA NOT NULL,
+                last_used BIGINT NOT NULL
             )
             """
         )
@@ -31,9 +39,12 @@ class MySQLStorage : CustomStorageGateway {
         connection.prepareStatement(
             """
             DELETE FROM intave_storage
-            WHERE last_used < ${System.currentTimeMillis() - unit.toMillis(value)}
+            WHERE last_used < ?
             """
-        ).execute()
+        ).use {
+            it.setLong(1, System.currentTimeMillis() - unit.toMillis(value))
+            it.execute()
+        }
     }
 
     override fun requestStorage(uuid: UUID, consumer: Consumer<ByteBuffer>) {
@@ -47,8 +58,7 @@ class MySQLStorage : CustomStorageGateway {
             it.setString(1, uuid.toString())
             val result = it.executeQuery()
             val bytes = if (result.next()) {
-                val blob = result.getBlob("data")
-                blob.getBytes(1, blob.length().toInt())
+                result.getBytes("data")
             } else {
                 ByteArray(0)
             }
@@ -57,21 +67,19 @@ class MySQLStorage : CustomStorageGateway {
     }
 
     override fun saveStorage(uuid: UUID, buffer: ByteBuffer) {
-        val blob = ByteArrayInputStream(buffer.array())
         connection.prepareStatement(
             """
             INSERT INTO intave_storage
-            VALUES (?, ?, ?) AS ins
-            ON DUPLICATE KEY
-                UPDATE
-                    intave_storage.data = ins.data,
-                    intave_storage.last_used = ins.last_used
+            VALUES(?, ?, ?)
+            ON CONFLICT(id) DO UPDATE SET
+                data = EXCLUDED.data,
+                last_used = EXCLUDED.last_used
             """
         ).use {
             it.setString(1, uuid.toString())
-            it.setBlob(2, blob)
+            it.setBytes(2, buffer.array())
             it.setLong(3, System.currentTimeMillis())
-            it.executeQuery()
+            it.execute()
         }
     }
 }

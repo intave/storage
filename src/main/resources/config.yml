@@ -1,11 +1,11 @@
+# May be either NONE, FILE or POSTGRESQL
 storageOption: FILE
-
-none:
 
 file:
   expire:
 
-sql:
-  expire:
-
-  # data
+postgresql:
+  host: localhost
+  database: testing
+  user: user
+  password: password

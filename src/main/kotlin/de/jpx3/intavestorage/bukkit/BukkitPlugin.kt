@@ -2,7 +2,7 @@ package de.jpx3.intavestorage.bukkit
 
 import de.jpx3.intave.access.player.storage.StorageGateway
 import de.jpx3.intavestorage.IntaveStorage
-import de.jpx3.intavestorage.storage.StorageOption
+import de.jpx3.intavestorage.storage.StorageType
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
@@ -22,11 +22,12 @@ class BukkitPlugin : JavaPlugin() {
         if (!configFile.exists()) {
             saveResource("config.yml", false)
         }
+
         with(YamlConfiguration()) {
             load(configFile)
 
             val storageOptionName = getString("storageOption", "NONE")
-            val storageOption = StorageOption.valueOf(storageOptionName?.uppercase() ?: "NONE")
+            val storageOption = StorageType.valueOf(storageOptionName?.uppercase() ?: "NONE")
             val configurationSection = getConfigurationSection("${storageOptionName?.lowercase()}")!!
 
             return storageOption.storageGatewayFrom(configurationSection)

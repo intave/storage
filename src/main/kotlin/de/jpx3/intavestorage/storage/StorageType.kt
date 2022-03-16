@@ -4,12 +4,12 @@ import de.jpx3.intave.access.player.storage.EmptyStorageGateway
 import de.jpx3.intave.access.player.storage.StorageGateway
 import org.bukkit.configuration.ConfigurationSection
 
-enum class StorageOption(
+enum class StorageType(
     private val resolve: (ConfigurationSection) -> StorageGateway
 ) {
     NONE({ EmptyStorageGateway() }),
     FILE({ config -> FileStorage(config) }),
-    MY_SQL({ MySQLStorage() })
+    POSTGRESQL({ config -> PostgreSqlStorage(config) })
 
     ;
 
