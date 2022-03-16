@@ -1,5 +1,7 @@
 # May be either NONE, FILE or POSTGRESQL
-storageOption: FILE
+storage-type: NONE
+
+none:
 
 file:
   expire:

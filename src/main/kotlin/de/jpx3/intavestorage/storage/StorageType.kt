@@ -9,9 +9,11 @@ enum class StorageType(
 ) {
     NONE({ EmptyStorageGateway() }),
     FILE({ config -> FileStorage(config) }),
-    POSTGRESQL({ config -> PostgreSqlStorage(config) })
+    POSTGRESQL({ config -> PostgreSqlStorage(config) });
 
-    ;
+    companion object {
+        fun default(): StorageType = NONE
+    }
 
     fun storageGatewayFrom(configuration: ConfigurationSection): StorageGateway {
         return resolve(configuration)
