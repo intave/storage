@@ -26,7 +26,10 @@ class BukkitPlugin : JavaPlugin() {
             val storageConfig = getConfigurationSection(storageConfigName)
                 ?: error("Storage configuration for $storageTypeName not found! (section $storageConfigName missing)")
             storageType.storageGatewayFrom(storageConfig).apply {
-                clearEntriesOlderThan(getLong("expire"), TimeUnit.DAYS)
+                val expiration = getLong("expire")
+                if (expiration >= 1) {
+                    clearEntriesOlderThan(expiration, TimeUnit.DAYS)
+                }
             }
         }
     }

@@ -11,7 +11,9 @@ storage-type: NONE
 file:
   # How many days should we keep storage data after the player's last connection
   # date?
+  # Minimum: 1
   # Recommended: 30
+  # Maximum (no expiration / file deletion): -1
   expire: 30
 
 # Configuration for the POSTGRESQL storage type. Used only if the storage type
@@ -31,7 +33,9 @@ postgresql:
   password: password
   # How many days should we keep storage data after the player's last connection
   # date?
+  # Minimum: 1
   # Recommended: 30
+  # Maximum (no expiration / entry deletion): -1
   expire: 30
 
 # Configuration for the MYSQL storage type. Used only if the storage type is set
@@ -51,5 +55,7 @@ mysql:
   password: password
   # How many days should we keep storage data after the player's last connection
   # date?
+  # Minimum: 1
   # Recommended: 30
+  # Maximum (no expiration / entry deletion): -1
   expire: 30
