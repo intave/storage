@@ -9,8 +9,8 @@ storage-type: NONE
 # Intave Storage will create a directory called 'Storage' in the same .intave
 # folder Intave uses and store data files there.
 file:
-  # How many days Intave Storage should keep storage data after the player's
-  # last connection date.
+  # How many days should we keep storage data after the player's last connection
+  # date?
   # Recommended: 30
   expire: 30
 
@@ -29,8 +29,8 @@ postgresql:
   user: user
   # Which password should we use to connect to the DBMS?
   password: password
-  # How many days Intave Storage should keep storage data after the player's
-  # last connection date.
+  # How many days should we keep storage data after the player's last connection
+  # date?
   # Recommended: 30
   expire: 30
 
@@ -49,7 +49,7 @@ mysql:
   user: user
   # Which password should we use to connect to the DBMS?
   password: password
-  # How many days Intave Storage should keep storage data after the player's
-  # last connection date.
+  # How many days should we keep storage data after the player's last connection
+  # date?
   # Recommended: 30
   expire: 30
