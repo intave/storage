@@ -21,3 +21,8 @@ jobs:
         with:
           arguments: build
           gradle-version: wrapper
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2-preview
+        with:
+          name: intave-access
+          path: build/libs/*-all.jar
