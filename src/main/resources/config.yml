@@ -1,8 +1,6 @@
 # May be either NONE, FILE, POSTGRESQL or MYSQL
 storage-type: NONE
 
-none:
-
 file:
   expire:
 

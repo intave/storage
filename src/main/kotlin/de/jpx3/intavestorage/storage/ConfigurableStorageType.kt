@@ -6,16 +6,17 @@ import de.jpx3.intavestorage.storage.database.MySqlStorage
 import de.jpx3.intavestorage.storage.database.PostgreSqlStorage
 import org.bukkit.configuration.ConfigurationSection
 
-enum class StorageType(
+enum class ConfigurableStorageType(
     private val resolve: (ConfigurationSection) -> StorageGateway
 ) {
-    NONE({ EmptyStorageGateway() }),
     FILE({ config -> FileStorage(config) }),
     POSTGRESQL({ config -> PostgreSqlStorage(config) }),
     MYSQL({ config -> MySqlStorage(config) });
 
     companion object {
-        fun default(): StorageType = NONE
+        fun fallback(): StorageGateway {
+            return EmptyStorageGateway()
+        }
     }
 
     fun storageGatewayFrom(configuration: ConfigurationSection): StorageGateway {

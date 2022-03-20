@@ -17,3 +17,9 @@ dependencies {
     implementation("org.postgresql:postgresql:42.3.3")
     implementation("mysql:mysql-connector-java:8.0.28")
 }
+
+tasks {
+    build {
+        dependsOn(shadowJar)
+    }
+}
