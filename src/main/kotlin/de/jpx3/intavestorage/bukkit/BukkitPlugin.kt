@@ -4,13 +4,15 @@ import de.jpx3.intave.access.player.storage.StorageGateway
 import de.jpx3.intavestorage.IntaveStorage
 import de.jpx3.intavestorage.storage.ConfigurableStorageType
 import org.bukkit.plugin.java.JavaPlugin
+import java.util.concurrent.TimeUnit
 
 class BukkitPlugin : JavaPlugin() {
     private var storage: IntaveStorage = IntaveStorage()
 
     override fun onEnable() {
         saveDefaultConfig()
-        storage.enable(storageGateway())
+        val storageGateway = storageGateway()
+        storage.enable(storageGateway)
     }
 
     private fun storageGateway(): StorageGateway {
@@ -23,7 +25,8 @@ class BukkitPlugin : JavaPlugin() {
             val storageConfigName = storageTypeName.lowercase()
             val storageConfig = getConfigurationSection(storageConfigName)
                 ?: error("Storage configuration for $storageTypeName not found! (section $storageConfigName missing)")
-            storageType.storageGatewayFrom(storageConfig)
+            val storageGateway = storageType.storageGatewayFrom(storageConfig)
+            storageGateway.also { it.clearEntriesOlderThan(getLong("expire"), TimeUnit.DAYS) }
         }
     }
 

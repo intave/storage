@@ -1,17 +1,55 @@
-# May be either NONE, FILE, POSTGRESQL or MYSQL
+# Determines how the Intave storage data is saved. Options are NONE (storage
+# data is not saved), FILE (storage data is saved in the .intave folder),
+# POSTGRESQL (storage data is stored in a Postgresql DBMS) or MYSQL (storage
+# data is stored in a MySQL DBMS).
 storage-type: NONE
 
+# Configuration for the FILE storage type. Used only if the storage type is set
+# to FILE.
+# Intave Storage will create a directory called 'Storage' in the same .intave
+# folder Intave uses and store data files there.
 file:
-  expire:
+  # How many days Intave Storage should keep storage data after the player's
+  # last connection date.
+  # Recommended: 30
+  expire: 30
 
+# Configuration for the POSTGRESQL storage type. Used only if the storage type
+# is set to POSTGRESQL.
+# Intave Storage will create a table called 'intave_storage' (if it does not
+# exist in the DBMS) and only read/write from that table.
 postgresql:
+  # Which host is the DBMS at?
+  # Example: localhost
+  # Example: localhost:12345
   host: localhost
+  # Which database should we connect to?
   database: testing
+  # Which user should we use to connect to the DBMS?
   user: user
+  # Which password should we use to connect to the DBMS?
   password: password
+  # How many days Intave Storage should keep storage data after the player's
+  # last connection date.
+  # Recommended: 30
+  expire: 30
 
+# Configuration for the MYSQL storage type. Used only if the storage type is set
+# to MYSQL.
+# Intave Storage will create a table called 'intave_storage' (if it does not
+# exist in the DBMS) and only read/write from that table.
 mysql:
+  # Which host is the DBMS at?
+  # Example: localhost
+  # Example: localhost:12345
   host: localhost
+  # Which database should we connect to?
   database: testing
+  # Which user should we use to connect to the DBMS?
   user: user
+  # Which password should we use to connect to the DBMS?
   password: password
+  # How many days Intave Storage should keep storage data after the player's
+  # last connection date.
+  # Recommended: 30
+  expire: 30

@@ -7,7 +7,7 @@ import de.jpx3.intavestorage.storage.database.PostgreSqlStorage
 import org.bukkit.configuration.ConfigurationSection
 
 enum class ConfigurableStorageType(
-    private val resolve: (ConfigurationSection) -> StorageGateway
+    private val resolve: (ConfigurationSection) -> ExpiringStorageGateway
 ) {
     FILE({ config -> FileStorage(config) }),
     POSTGRESQL({ config -> PostgreSqlStorage(config) }),
@@ -19,7 +19,7 @@ enum class ConfigurableStorageType(
         }
     }
 
-    fun storageGatewayFrom(configuration: ConfigurationSection): StorageGateway {
+    fun storageGatewayFrom(configuration: ConfigurationSection): ExpiringStorageGateway {
         return resolve(configuration)
     }
 }
