@@ -3,6 +3,6 @@ Intave Storage is a (optional) storage provider that offers various storage opti
 
 ## Downloading the jar file
 
-1. Go to https://github.com/intave/storage/actions.
-2. Click on the latest successful build.
-3. Click on the `intave-storage` artifact at the bottom to download the .jar.
+1. Go to https://github.com/intave/storage/releases.
+2. Click on the latest release.
+3. Click on the `intavestorage-0.1.0-all.jar` asset to download the .jar.
