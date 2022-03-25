@@ -1,17 +1,16 @@
-package de.jpx3.intavestorage.storage.database
+package de.jpx3.intavestorage.storage.sql
 
 import org.bukkit.configuration.ConfigurationSection
 import org.mariadb.jdbc.Driver
-import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.PreparedStatement
 
 @Suppress("SqlNoDataSourceInspection")
-class MariaDbStorage(config: ConfigurationSection) : DatabaseStorage {
-    private val connection: Connection = run {
+class MariaDbStorage(config: ConfigurationSection) : JdbcBackedStorage {
+    private val connection = run {
         val url = "jdbc:mariadb://${config.getString("host")}/${config.getString("database")}"
         val user = config.getString("user")
-        val password = config.getString("password") as String
+        val password = config.getString("password")
         DriverManager.registerDriver(Driver())
         DriverManager.getConnection(url, user, password)
     }

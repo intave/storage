@@ -1,4 +1,4 @@
-package de.jpx3.intavestorage.storage.database
+package de.jpx3.intavestorage.storage.sql
 
 import de.jpx3.intavestorage.storage.ExpiringStorageGateway
 import java.nio.ByteBuffer
@@ -7,7 +7,7 @@ import java.util.UUID
 import java.util.concurrent.TimeUnit
 import java.util.function.Consumer
 
-interface DatabaseStorage : ExpiringStorageGateway {
+interface JdbcBackedStorage : ExpiringStorageGateway {
     fun prepareTable()
 
     override fun requestStorage(id: UUID, lazyReturn: Consumer<ByteBuffer>) {

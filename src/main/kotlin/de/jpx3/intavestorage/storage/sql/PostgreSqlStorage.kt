@@ -1,17 +1,16 @@
-package de.jpx3.intavestorage.storage.database
+package de.jpx3.intavestorage.storage.sql
 
-import com.mysql.cj.jdbc.Driver
 import org.bukkit.configuration.ConfigurationSection
-import java.sql.Connection
+import org.postgresql.Driver
 import java.sql.DriverManager
 import java.sql.PreparedStatement
 
 @Suppress("SqlNoDataSourceInspection")
-class MySqlStorage(config: ConfigurationSection) : DatabaseStorage {
-    private val connection: Connection = run {
-        val url = "jdbc:mysql://${config.getString("host")}/${config.getString("database")}"
+class PostgreSqlStorage(config: ConfigurationSection) : JdbcBackedStorage {
+    private val connection = run {
+        val url = "jdbc:postgresql://${config.getString("host")}/${config.getString("database")}"
         val user = config.getString("user")
-        val password = config.getString("password") as String
+        val password = config.getString("password")
         DriverManager.registerDriver(Driver())
         DriverManager.getConnection(url, user, password)
     }
@@ -23,9 +22,9 @@ class MySqlStorage(config: ConfigurationSection) : DatabaseStorage {
     override fun prepareTable() {
         connection.createStatement().execute(
             """
-            CREATE TABLE IF NOT EXISTS intave_storage (
+            CREATE TABLE IF NOT EXISTS intave_storage(
                 id CHAR(36) PRIMARY KEY NOT NULL,
-                data MEDIUMBLOB NOT NULL,
+                data BYTEA NOT NULL,
                 last_used BIGINT NOT NULL
             )
             """
@@ -46,11 +45,10 @@ class MySqlStorage(config: ConfigurationSection) : DatabaseStorage {
         return connection.prepareStatement(
             """
             INSERT INTO intave_storage
-            VALUES(?, ?, ?) as excluded
-            ON DUPLICATE KEY UPDATE 
-                data = excluded.data,
-                last_used = excluded.last_used
-
+            VALUES(?, ?, ?)
+            ON CONFLICT(id) DO UPDATE SET
+                data = EXCLUDED.data,
+                last_used = EXCLUDED.last_used
             """
         )
     }
