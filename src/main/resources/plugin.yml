@@ -1,6 +1,0 @@
-name: IntaveStorage
-main: de.jpx3.intavestorage.bukkit.BukkitPlugin
-version: 0.1.0
-
-depend:
-  - Intave

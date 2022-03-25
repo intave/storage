@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm") version "1.6.10"
     id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("net.minecrell.plugin-yml.bukkit") version "0.5.1"
 }
 
 group = "de.jpx3"
@@ -23,4 +24,12 @@ tasks {
     build {
         dependsOn(shadowJar)
     }
+}
+
+bukkit {
+    name = "IntaveStorage"
+    main = "de.jpx3.intavestorage.bukkit.BukkitPlugin"
+    version = "${rootProject.version}"
+
+    depend = listOf("Intave")
 }
