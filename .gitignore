@@ -13,4 +13,5 @@
 !libs/
 !src/
 !.gitignore
+!LICENSE
 !README.md
