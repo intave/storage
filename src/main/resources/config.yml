@@ -85,10 +85,10 @@ mysql:
   # Maximum (no expiration / entry deletion): -1
   expire: 30
 
-# Configuration for the MONGODB storage type. Used only if the storage type is set
-# to MONGODB.
-# Intave Storage will create a database and collection "storage" with the supplied name (if it does not
-# exist in the DBMS) and only read/write from that database and collection "storage".
+# Configuration for the MONGODB storage type. Used only if the storage type is
+# set to MONGODB.
+# Intave Storage will create a database (if it does not yet exist in the DBMS)
+# and a collection called 'storage' and only read/write from that collection.
 mongodb:
   # Which host is the DBMS at?
   # Example: localhost
