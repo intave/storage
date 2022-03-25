@@ -14,7 +14,8 @@ enum class ConfigurableStorageType(
     FILE(::FileStorage),
     POSTGRESQL(::PostgreSqlStorage),
     MYSQL(::MySqlStorage),
-    MARIADB(::MariaDbStorage);
+    MARIADB(::MariaDbStorage),
+    MONGODB(::MongoDbStorage);
 
     fun storageGatewayFrom(configuration: ConfigurationSection): ExpiringStorageGateway {
         return resolve(configuration)

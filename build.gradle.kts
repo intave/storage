@@ -18,6 +18,7 @@ dependencies {
     implementation("org.postgresql:postgresql:42.3.3")
     implementation("org.mariadb.jdbc:mariadb-java-client:3.0.3")
     implementation("mysql:mysql-connector-java:8.0.28")
+    implementation("org.mongodb:mongodb-driver-sync:4.5.0")
 }
 
 tasks {
