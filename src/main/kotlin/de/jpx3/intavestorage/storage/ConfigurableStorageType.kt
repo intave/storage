@@ -1,6 +1,7 @@
 package de.jpx3.intavestorage.storage
 
 import de.jpx3.intave.access.player.storage.EmptyStorageGateway
+import de.jpx3.intavestorage.storage.database.MariaDbStorage
 import de.jpx3.intavestorage.storage.database.MySqlStorage
 import de.jpx3.intavestorage.storage.database.PostgreSqlStorage
 import org.bukkit.configuration.ConfigurationSection
@@ -12,7 +13,8 @@ enum class ConfigurableStorageType(
 ) {
     FILE(::FileStorage),
     POSTGRESQL(::PostgreSqlStorage),
-    MYSQL(::MySqlStorage);
+    MYSQL(::MySqlStorage),
+    MARIADB(::MariaDbStorage);
 
     fun storageGatewayFrom(configuration: ConfigurationSection): ExpiringStorageGateway {
         return resolve(configuration)

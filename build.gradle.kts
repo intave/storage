@@ -15,6 +15,7 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT")
     compileOnly(fileTree("libs/") { include("*.jar") })
     implementation("org.postgresql:postgresql:42.3.3")
+    implementation("org.mariadb.jdbc:mariadb-java-client:3.0.3")
     implementation("mysql:mysql-connector-java:8.0.28")
 }
 

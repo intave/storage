@@ -1,7 +1,9 @@
-# Determines how the Intave storage data is saved. Options are NONE (storage
-# data is not saved), FILE (storage data is saved in the .intave folder),
-# POSTGRESQL (storage data is stored in a Postgresql DBMS) or MYSQL (storage
-# data is stored in a MySQL DBMS).
+# Determines how the Intave storage data is saved. Options (choose one):
+# - NONE (storage data is not saved)
+# - FILE (storage data is saved in the .intave folder)
+# - POSTGRESQL (storage data is stored in a Postgresql DBMS)
+# - MARIADB (storage data is stored in a MariaDB DBMS)
+# - MYSQL (storage data is stored in a MySQL DBMS).
 storage-type: NONE
 
 # Configuration for the FILE storage type. Used only if the storage type is set
@@ -21,6 +23,28 @@ file:
 # Intave Storage will create a table called 'intave_storage' (if it does not
 # exist in the DBMS) and only read/write from that table.
 postgresql:
+  # Which host is the DBMS at?
+  # Example: localhost
+  # Example: localhost:12345
+  host: localhost
+  # Which database should we connect to?
+  database: testing
+  # Which user should we use to connect to the DBMS?
+  user: user
+  # Which password should we use to connect to the DBMS?
+  password: password
+  # How many days should we keep storage data after the player's last connection
+  # date?
+  # Minimum: 1
+  # Recommended: 30
+  # Maximum (no expiration / entry deletion): -1
+  expire: 30
+
+# Configuration for the MARIADB storage type. Used only if the storage type is
+# set to MARIADB.
+# Intave Storage will create a table called 'intave_storage' (if it does not
+# exist in the DBMS) and only read/write from that table.
+mariadb:
   # Which host is the DBMS at?
   # Example: localhost
   # Example: localhost:12345
