@@ -20,5 +20,5 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v2-preview
         with:
-          name: intave-access
+          name: intave-storage
           path: build/libs/*-all.jar
