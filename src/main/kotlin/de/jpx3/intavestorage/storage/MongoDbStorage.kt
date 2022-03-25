@@ -12,7 +12,7 @@ import org.bson.codecs.pojo.PojoCodecProvider
 import org.bson.types.Binary
 import org.bukkit.configuration.ConfigurationSection
 import java.nio.ByteBuffer
-import java.util.*
+import java.util.UUID
 import java.util.concurrent.TimeUnit
 import java.util.function.Consumer
 
@@ -46,8 +46,8 @@ class MongoDbStorage(config: ConfigurationSection) : ExpiringStorageGateway {
             .build()
     }
     private val connection = MongoClients.create(connectionSettings)
-    private val database =
-        connection.getDatabase(config.getString("database")!!).withCodecRegistry(pojoCodecRegistry)
+    private val database = connection.getDatabase(config.getString("database")!!)
+        .withCodecRegistry(pojoCodecRegistry)
     private val storageCollection = database.getCollection("storage").withCodecRegistry(pojoCodecRegistry)
 
     override fun clearEntriesOlderThan(value: Long, unit: TimeUnit) {

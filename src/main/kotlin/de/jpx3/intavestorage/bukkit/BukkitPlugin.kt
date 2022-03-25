@@ -17,10 +17,7 @@ class BukkitPlugin : JavaPlugin() {
 
     private fun storageGateway(): StorageGateway {
         return with(config) {
-            val storageTypeName = getString("storage-type")
-            if (storageTypeName == null || storageTypeName == "NONE") {
-                return fallbackStorageGateway
-            }
+            val storageTypeName = getString("storage-type").takeIf { it != "NONE" } ?: return fallbackStorageGateway
             val storageType = ConfigurableStorageType.valueOf(storageTypeName)
             val storageConfigName = storageTypeName.lowercase()
             val storageConfig = getConfigurationSection(storageConfigName)
