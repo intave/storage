@@ -10,4 +10,4 @@ You can use your existing PostgreSQL, MariaDB, MySQL or MongoDB database, or fal
 
 1. Go to https://github.com/intave/storage/releases.
 2. Click on the latest release.
-3. Click on the `intavestorage-0.1.0-all.jar` asset to download the .jar.
+3. Click on the `intavestorage-\<version\>-all.jar` asset to download the .jar.
