@@ -1,4 +1,4 @@
-package de.jpx3.intavestorage.storage
+package de.jpx3.intavestorage
 
 import com.mongodb.MongoClientSettings
 import com.mongodb.MongoCredential
@@ -10,21 +10,20 @@ import org.bson.UuidRepresentation
 import org.bson.codecs.configuration.CodecRegistries
 import org.bson.codecs.pojo.PojoCodecProvider
 import org.bson.types.Binary
-import org.bukkit.configuration.ConfigurationSection
 import java.nio.ByteBuffer
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 import java.util.function.Consumer
 
-class MongoDbStorage(config: ConfigurationSection) : ExpiringStorageGateway {
+class MongoDbStorageGateway(config: MongoDbConfiguration) : ExpiringStorageGateway {
     private val pojoCodecRegistry = CodecRegistries.fromRegistries(
         MongoClientSettings.getDefaultCodecRegistry(),
         CodecRegistries.fromProviders(PojoCodecProvider.builder().automatic(true).build())
     )
-    private val connectionSettings = if (config.getBoolean("authorization")) {
-        val user = config.getString("user")!!
-        val password = config.getString("password")!!
-        val defaultDatabase = config.getString("defaultdb")!!
+    private val connectionSettings = if (config.authorization) {
+        val user = config.user!!
+        val password = config.password!!
+        val defaultDatabase = config.defaultDb!!
 
         // Create the settings with credentials
         MongoClientSettings.builder()
@@ -46,8 +45,7 @@ class MongoDbStorage(config: ConfigurationSection) : ExpiringStorageGateway {
             .build()
     }
     private val connection = MongoClients.create(connectionSettings)
-    private val database = connection.getDatabase(config.getString("database")!!)
-        .withCodecRegistry(pojoCodecRegistry)
+    private val database = connection.getDatabase(config.database).withCodecRegistry(pojoCodecRegistry)
     private val storageCollection = database.getCollection("storage").withCodecRegistry(pojoCodecRegistry)
 
     override fun clearEntriesOlderThan(value: Long, unit: TimeUnit) {

@@ -1,6 +1,5 @@
-package de.jpx3.intavestorage.storage.sql
+package de.jpx3.intavestorage
 
-import de.jpx3.intavestorage.storage.ExpiringStorageGateway
 import java.nio.ByteBuffer
 import java.sql.PreparedStatement
 import java.util.UUID

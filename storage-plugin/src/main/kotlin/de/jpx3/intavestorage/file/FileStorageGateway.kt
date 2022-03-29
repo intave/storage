@@ -1,6 +1,6 @@
-package de.jpx3.intavestorage.storage
+package de.jpx3.intavestorage.file
 
-import org.bukkit.configuration.ConfigurationSection
+import de.jpx3.intavestorage.ExpiringStorageGateway
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -9,7 +9,7 @@ import java.util.UUID
 import java.util.concurrent.TimeUnit
 import java.util.function.Consumer
 
-class FileStorage(config: ConfigurationSection) : ExpiringStorageGateway {
+class FileStorageGateway : ExpiringStorageGateway {
     override fun requestStorage(id: UUID, consumer: Consumer<ByteBuffer>) {
         val file = fileOf(id)
         val bytes = FileInputStream(file).use(FileInputStream::readBytes)

@@ -1,17 +1,19 @@
 # Ignore everything
 /*
 
-# Whitelist gradle
-!gradle/
-!build.gradle.kts
-!gradle.properties
-!gradlew
-!gradlew.bat
-!settings.gradle.kts
-
 # Whitelist source
-!libs/
-!src/
-!.gitignore
-!LICENSE
-!README.md
+!/gradle/
+!/libs/
+!/storage-mariadb/
+!/storage-mongodb/
+!/storage-mysql/
+!/storage-plugin/
+!/storage-postgresql/
+!/.gitignore
+!/build.gradle.kts
+!/gradle.properties
+!/gradlew
+!/gradlew.bat
+!/LICENSE
+!/README.md
+!/settings.gradle.kts

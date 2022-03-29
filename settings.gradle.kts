@@ -1,7 +1,12 @@
+rootProject.name = "intavestorage"
+include("storage-mysql")
+include("storage-plugin")
+
 pluginManagement {
     repositories {
         gradlePluginPortal()
     }
 }
-
-rootProject.name = "intavestorage"
+include("storage-postgresql")
+include("storage-mariadb")
+include("storage-mongodb")
