@@ -1,11 +1,12 @@
-package de.jpx3.intavestorage
+package de.jpx3.intavestorage.postgresql
 
-import org.mariadb.jdbc.Driver
+import de.jpx3.intavestorage.JdbcBackedStorageGateway
+import org.postgresql.Driver
 import java.sql.DriverManager
 import java.sql.PreparedStatement
 
-class MariaDbStorageGateway(config: MariaDbConfiguration) : JdbcBackedStorage {
-    private val connection by lazy {
+class PostgreSqlStorageGateway(config: PostgreSqlConfiguration) : JdbcBackedStorageGateway {
+    private val connection = run {
         DriverManager.registerDriver(Driver())
         DriverManager.getConnection(config.url, config.user, config.password)
     }
@@ -17,9 +18,9 @@ class MariaDbStorageGateway(config: MariaDbConfiguration) : JdbcBackedStorage {
     override fun prepareTable() {
         connection.createStatement().execute(
             """
-            CREATE TABLE IF NOT EXISTS intave_storage (
+            CREATE TABLE IF NOT EXISTS intave_storage(
                 id CHAR(36) PRIMARY KEY NOT NULL,
-                data MEDIUMBLOB NOT NULL,
+                data BYTEA NOT NULL,
                 last_used BIGINT NOT NULL
             )
             """
@@ -41,9 +42,9 @@ class MariaDbStorageGateway(config: MariaDbConfiguration) : JdbcBackedStorage {
             """
             INSERT INTO intave_storage
             VALUES(?, ?, ?)
-            ON DUPLICATE KEY UPDATE 
-                data = VALUES(data),
-                last_used = VALUES(last_used)
+            ON CONFLICT(id) DO UPDATE SET
+                data = EXCLUDED.data,
+                last_used = EXCLUDED.last_used
             """
         )
     }

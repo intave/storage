@@ -5,7 +5,7 @@ import org.bukkit.configuration.ConfigurationSection
 /**
  * Interface for service providers of [ExpiringStorageGateway]s.
  */
-fun interface StorageGatewayFactory {
+fun interface StorageGatewayProvider {
     /**
      * Provides an [ExpiringStorageGateway] for a specific type.
      *

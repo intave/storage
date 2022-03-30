@@ -32,5 +32,5 @@ tasks {
 }
 
 serviceLoader {
-    serviceInterfaces.push("de.jpx3.intavestorage.StorageGatewayFactory")
+    serviceInterfaces.push("de.jpx3.intavestorage.StorageGatewayProvider")
 }

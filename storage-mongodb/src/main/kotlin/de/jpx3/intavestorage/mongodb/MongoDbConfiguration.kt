@@ -1,4 +1,4 @@
-package de.jpx3.intavestorage
+package de.jpx3.intavestorage.mongodb
 
 import org.bukkit.configuration.ConfigurationSection
 

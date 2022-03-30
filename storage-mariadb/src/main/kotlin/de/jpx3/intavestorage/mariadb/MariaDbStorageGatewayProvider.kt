@@ -1,11 +1,13 @@
-package de.jpx3.intavestorage
+package de.jpx3.intavestorage.mariadb
 
+import de.jpx3.intavestorage.ExpiringStorageGateway
+import de.jpx3.intavestorage.StorageGatewayProvider
 import org.bukkit.configuration.ConfigurationSection
 
 /**
  * Service provider of [MariaDbStorageGateway].
  */
-class MariaDbStorageGatewayFactory : StorageGatewayFactory {
+class MariaDbStorageGatewayProvider : StorageGatewayProvider {
     override fun storageGatewayFor(
         storageType: String
     ): ((ConfigurationSection) -> ExpiringStorageGateway)? {

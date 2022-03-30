@@ -6,7 +6,7 @@ import java.util.UUID
 import java.util.concurrent.TimeUnit
 import java.util.function.Consumer
 
-interface JdbcBackedStorage : ExpiringStorageGateway {
+interface JdbcBackedStorageGateway : ExpiringStorageGateway {
     fun prepareTable()
 
     override fun requestStorage(id: UUID, lazyReturn: Consumer<ByteBuffer>) {

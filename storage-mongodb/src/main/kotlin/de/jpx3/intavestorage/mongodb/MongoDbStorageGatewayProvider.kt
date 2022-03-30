@@ -1,11 +1,13 @@
-package de.jpx3.intavestorage
+package de.jpx3.intavestorage.mongodb
 
+import de.jpx3.intavestorage.ExpiringStorageGateway
+import de.jpx3.intavestorage.StorageGatewayProvider
 import org.bukkit.configuration.ConfigurationSection
 
 /**
  * Service provider of TODO.
  */
-class MongoDbStorageGatewayFactory : StorageGatewayFactory {
+class MongoDbStorageGatewayProvider : StorageGatewayProvider {
     override fun storageGatewayFor(
         storageType: String
     ): ((ConfigurationSection) -> ExpiringStorageGateway)? {

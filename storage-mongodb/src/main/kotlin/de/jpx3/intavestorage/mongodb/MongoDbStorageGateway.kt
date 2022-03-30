@@ -1,10 +1,11 @@
-package de.jpx3.intavestorage
+package de.jpx3.intavestorage.mongodb
 
 import com.mongodb.MongoClientSettings
 import com.mongodb.MongoCredential
 import com.mongodb.client.MongoClients
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.Updates
+import de.jpx3.intavestorage.ExpiringStorageGateway
 import org.bson.Document
 import org.bson.UuidRepresentation
 import org.bson.codecs.configuration.CodecRegistries

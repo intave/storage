@@ -1,11 +1,12 @@
-package de.jpx3.intavestorage
+package de.jpx3.intavestorage.mariadb
 
-import com.mysql.cj.jdbc.Driver
+import de.jpx3.intavestorage.JdbcBackedStorageGateway
+import org.mariadb.jdbc.Driver
 import java.sql.DriverManager
 import java.sql.PreparedStatement
 
-class MySqlStorageGateway(config: MySqlConfiguration) : JdbcBackedStorage {
-    private val connection = run {
+class MariaDbStorageGateway(config: MariaDbConfiguration) : JdbcBackedStorageGateway {
+    private val connection by lazy {
         DriverManager.registerDriver(Driver())
         DriverManager.getConnection(config.url, config.user, config.password)
     }
@@ -40,10 +41,10 @@ class MySqlStorageGateway(config: MySqlConfiguration) : JdbcBackedStorage {
         return connection.prepareStatement(
             """
             INSERT INTO intave_storage
-            VALUES(?, ?, ?) as excluded
+            VALUES(?, ?, ?)
             ON DUPLICATE KEY UPDATE 
-                data = excluded.data,
-                last_used = excluded.last_used
+                data = VALUES(data),
+                last_used = VALUES(last_used)
             """
         )
     }

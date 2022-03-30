@@ -1,4 +1,4 @@
-package de.jpx3.intavestorage
+package de.jpx3.intavestorage.postgresql
 
 import org.bukkit.configuration.ConfigurationSection
 
