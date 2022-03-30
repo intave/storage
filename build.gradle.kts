@@ -6,8 +6,19 @@ plugins {
 group = "de.jpx3"
 version = "0.3.0"
 
-repositories {
-    mavenCentral()
+allprojects {
+    apply(plugin = "org.jetbrains.kotlin.jvm")
+    apply(plugin = "com.github.johnrengelman.shadow")
+
+    repositories {
+        mavenCentral()
+        maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
+    }
+
+    dependencies {
+        compileOnly("org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT")
+        compileOnly(fileTree("${rootProject.projectDir}/libs/") { include("*.jar") })
+    }
 }
 
 dependencies {
