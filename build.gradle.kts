@@ -38,3 +38,11 @@ dependencies {
     implementation(project(":storage-plugin"))
     implementation(project(":storage-postgresql"))
 }
+
+tasks {
+    shadowJar {
+        val classifier = "all"
+        archiveFileName.set("${rootProject.name}-${rootProject.version}-$classifier.jar")
+        archiveClassifier.set(classifier)
+    }
+}

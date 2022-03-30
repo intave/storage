@@ -11,11 +11,9 @@ bukkit {
 }
 
 tasks {
-    build {
-        dependsOn(shadowJar)
-    }
-
     shadowJar {
-        mergeServiceFiles()
+        val classifier = "file"
+        archiveFileName.set("${rootProject.name}-${rootProject.version}-$classifier.jar")
+        archiveClassifier.set(classifier)
     }
 }
