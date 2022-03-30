@@ -27,6 +27,7 @@ allprojects {
 
         shadowJar {
             mergeServiceFiles()
+            destinationDirectory.set(rootProject.buildDir.resolve("libs"))
         }
     }
 }

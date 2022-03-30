@@ -21,10 +21,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: intave-storage
-          path: |
-            ./build/libs/*-all.jar
-            ./*/build/libs/*-mariadb.jar
-            ./*/build/libs/*-mongodb.jar
-            ./*/build/libs/*-mysql.jar
-            ./*/build/libs/*-file.jar
-            ./*/build/libs/*-postgresql.jar
+          path: ./build/libs/intavestorage-*-*.jar
