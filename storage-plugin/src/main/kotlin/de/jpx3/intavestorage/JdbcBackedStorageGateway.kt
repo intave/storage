@@ -3,7 +3,6 @@ package de.jpx3.intavestorage
 import java.nio.ByteBuffer
 import java.sql.PreparedStatement
 import java.util.UUID
-import java.util.concurrent.TimeUnit
 import java.util.function.Consumer
 
 interface JdbcBackedStorageGateway : ExpiringStorageGateway {
@@ -35,12 +34,14 @@ interface JdbcBackedStorageGateway : ExpiringStorageGateway {
 
     fun saveStorageQuery(): PreparedStatement
 
-    override fun clearEntriesOlderThan(value: Long, unit: TimeUnit) {
+    override fun clearOldEntries() {
         clearEntriesQuery().use {
-            it.setLong(1, System.currentTimeMillis() - unit.toMillis(value))
+            it.setLong(1, System.currentTimeMillis() - expirationThreshold())
             it.execute()
         }
     }
+
+    fun expirationThreshold(): Long
 
     fun clearEntriesQuery(): PreparedStatement
 }

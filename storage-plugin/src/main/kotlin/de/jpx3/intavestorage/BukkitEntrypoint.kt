@@ -46,11 +46,3 @@ class BukkitEntrypoint : JavaPlugin() {
         return config.getConfigurationSection(storageType.lowercase())
     }
 }
-
-// TODO: expire storage data
-//            storageType.storageGatewayFrom(storageConfig).apply {
-//                val expiration = getLong("expire")
-//                if (expiration >= 1) {
-//                    clearEntriesOlderThan(expiration, TimeUnit.DAYS)
-//                }
-//            }

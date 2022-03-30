@@ -4,11 +4,19 @@ import de.jpx3.intavestorage.JdbcBackedStorageGateway
 import org.mariadb.jdbc.Driver
 import java.sql.DriverManager
 import java.sql.PreparedStatement
+import java.util.concurrent.TimeUnit
 
-class MariaDbStorageGateway(config: MariaDbConfiguration) : JdbcBackedStorageGateway {
+/**
+ * Storage gateway between Intave and a MariaDB database.
+ *
+ * @property config The [MariaDbConfiguration].
+ */
+class MariaDbStorageGateway(
+    private val config: MariaDbConfiguration
+) : JdbcBackedStorageGateway {
     private val connection by lazy {
         DriverManager.registerDriver(Driver())
-        DriverManager.getConnection(config.url, config.user, config.password)
+        DriverManager.getConnection(config.uri, config.user, config.password)
     }
 
     init {
@@ -56,5 +64,9 @@ class MariaDbStorageGateway(config: MariaDbConfiguration) : JdbcBackedStorageGat
             WHERE last_used < ?
             """
         )
+    }
+
+    override fun expirationThreshold(): Long {
+        return TimeUnit.DAYS.toMillis(config.expirationThreshold)
     }
 }

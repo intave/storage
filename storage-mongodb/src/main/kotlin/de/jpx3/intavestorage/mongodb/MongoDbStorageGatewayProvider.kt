@@ -5,7 +5,7 @@ import de.jpx3.intavestorage.StorageGatewayProvider
 import org.bukkit.configuration.ConfigurationSection
 
 /**
- * Service provider of TODO.
+ * Service provider of [MongoDbStorageGateway].
  */
 class MongoDbStorageGatewayProvider : StorageGatewayProvider {
     override fun storageGatewayFor(

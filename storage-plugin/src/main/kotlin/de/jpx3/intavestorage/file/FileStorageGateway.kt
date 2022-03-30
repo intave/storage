@@ -9,7 +9,7 @@ import java.util.UUID
 import java.util.concurrent.TimeUnit
 import java.util.function.Consumer
 
-class FileStorageGateway : ExpiringStorageGateway {
+class FileStorageGateway(private val config: FileConfiguration) : ExpiringStorageGateway {
     override fun requestStorage(id: UUID, consumer: Consumer<ByteBuffer>) {
         val file = fileOf(id)
         val bytes = FileInputStream(file).use(FileInputStream::readBytes)
@@ -37,11 +37,12 @@ class FileStorageGateway : ExpiringStorageGateway {
         return file
     }
 
-    override fun clearEntriesOlderThan(value: Long, unit: TimeUnit) {
+    override fun clearOldEntries() {
+        val expirationThreshold = TimeUnit.DAYS.toMillis(config.expire)
         cacheFile()
             .walkTopDown()
             .filter { file -> file.isFile && file.name.endsWith(".storage") }
-            .filter { file -> System.currentTimeMillis() - file.lastModified() > unit.toMillis(value) }
+            .filter { file -> System.currentTimeMillis() - file.lastModified() > expirationThreshold }
             .forEach(File::delete)
     }
 

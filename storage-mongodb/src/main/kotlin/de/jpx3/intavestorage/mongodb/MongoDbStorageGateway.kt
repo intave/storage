@@ -16,10 +16,19 @@ import java.util.UUID
 import java.util.concurrent.TimeUnit
 import java.util.function.Consumer
 
-class MongoDbStorageGateway(config: MongoDbConfiguration) : ExpiringStorageGateway {
+/**
+ * Storage gateway between Intave and a MongoDB database.
+ *
+ * @property config The [MongoDbConfiguration].
+ */
+class MongoDbStorageGateway(
+    private val config: MongoDbConfiguration
+) : ExpiringStorageGateway {
     private val pojoCodecRegistry = CodecRegistries.fromRegistries(
         MongoClientSettings.getDefaultCodecRegistry(),
-        CodecRegistries.fromProviders(PojoCodecProvider.builder().automatic(true).build())
+        CodecRegistries.fromProviders(
+            PojoCodecProvider.builder().automatic(true).build()
+        )
     )
     private val connectionSettings = if (config.authorization) {
         val user = config.user!!
@@ -46,14 +55,19 @@ class MongoDbStorageGateway(config: MongoDbConfiguration) : ExpiringStorageGatew
             .build()
     }
     private val connection = MongoClients.create(connectionSettings)
-    private val database = connection.getDatabase(config.database).withCodecRegistry(pojoCodecRegistry)
-    private val storageCollection = database.getCollection("storage").withCodecRegistry(pojoCodecRegistry)
+    private val database = connection
+        .getDatabase(config.database)
+        .withCodecRegistry(pojoCodecRegistry)
+    private val storageCollection = database
+        .getCollection("storage")
+        .withCodecRegistry(pojoCodecRegistry)
 
-    override fun clearEntriesOlderThan(value: Long, unit: TimeUnit) {
+    override fun clearOldEntries() {
         storageCollection.deleteMany(
             Filters.lt(
                 "last_used",
-                System.currentTimeMillis() - unit.toMillis(value)
+                System.currentTimeMillis() -
+                    TimeUnit.DAYS.toMillis(config.expirationThreshold)
             )
         )
     }

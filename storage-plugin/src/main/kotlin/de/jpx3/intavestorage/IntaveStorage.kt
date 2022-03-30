@@ -35,6 +35,7 @@ class IntaveStorage(private val classLoader: ClassLoader) {
     fun enable(storageType: String, config: ConfigurationSection) {
         val storageGatewayProvider = storageGatewayProviderFor(storageType)
         val storageGateway = storageGatewayProvider(config)
+        storageGateway.clearOldEntries()
         intave().setStorageGateway(storageGateway)
     }
 

@@ -4,11 +4,19 @@ import de.jpx3.intavestorage.JdbcBackedStorageGateway
 import org.postgresql.Driver
 import java.sql.DriverManager
 import java.sql.PreparedStatement
+import java.util.concurrent.TimeUnit
 
-class PostgreSqlStorageGateway(config: PostgreSqlConfiguration) : JdbcBackedStorageGateway {
+/**
+ * Storage gateway between Intave and a PostgreSQL database.
+ *
+ * @property config The [PostgreSqlConfiguration].
+ */
+class PostgreSqlStorageGateway(
+    private val config: PostgreSqlConfiguration
+) : JdbcBackedStorageGateway {
     private val connection = run {
         DriverManager.registerDriver(Driver())
-        DriverManager.getConnection(config.url, config.user, config.password)
+        DriverManager.getConnection(config.uri, config.user, config.password)
     }
 
     init {
@@ -56,5 +64,9 @@ class PostgreSqlStorageGateway(config: PostgreSqlConfiguration) : JdbcBackedStor
             WHERE last_used < ?
             """
         )
+    }
+
+    override fun expirationThreshold(): Long {
+        return TimeUnit.DAYS.toMillis(config.expirationThreshold)
     }
 }

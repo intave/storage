@@ -4,11 +4,19 @@ import com.mysql.cj.jdbc.Driver
 import de.jpx3.intavestorage.JdbcBackedStorageGateway
 import java.sql.DriverManager
 import java.sql.PreparedStatement
+import java.util.concurrent.TimeUnit
 
-class MySqlStorageGateway(config: MySqlConfiguration) : JdbcBackedStorageGateway {
+/**
+ * Storage gateway between Intave and a MySQL database.
+ *
+ * @property config The [MySqlConfiguration].
+ */
+class MySqlStorageGateway(
+    private val config: MySqlConfiguration
+) : JdbcBackedStorageGateway {
     private val connection = run {
         DriverManager.registerDriver(Driver())
-        DriverManager.getConnection(config.url, config.user, config.password)
+        DriverManager.getConnection(config.uri, config.user, config.password)
     }
 
     init {
@@ -56,5 +64,9 @@ class MySqlStorageGateway(config: MySqlConfiguration) : JdbcBackedStorageGateway
             WHERE last_used < ?
             """
         )
+    }
+
+    override fun expirationThreshold(): Long {
+        return TimeUnit.DAYS.toMillis(config.expirationThreshold)
     }
 }
