@@ -21,17 +21,13 @@ data class MySqlConfiguration(
 /**
  * Creates a [MySqlStorageGateway] from a [ConfigurationSection].
  *
- * @param config Section from the Bukkit configuration corresponding to the
- * [MySqlStorageGateway].
  * @return The [MySqlStorageGateway].
  */
-fun mySqlConfiguration(config: ConfigurationSection): MySqlConfiguration {
-    return with(config) {
-        MySqlConfiguration(
-            "jdbc:mysql://${string("host")}/${string("database")}",
-            string("user"),
-            string("password"),
-            getLong("expire")
-        )
-    }
+fun ConfigurationSection.mySqlConfiguration(): MySqlConfiguration {
+    return MySqlConfiguration(
+        "jdbc:mysql://${string("host")}/${string("database")}",
+        string("user"),
+        string("password"),
+        getLong("expire")
+    )
 }

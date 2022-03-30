@@ -10,7 +10,7 @@ import org.bukkit.configuration.ConfigurationSection
 class FileStorageGatewayProvider : StorageGatewayProvider {
     override fun storageGatewayFor(storageType: String): ((ConfigurationSection) -> ExpiringStorageGateway)? {
         return storageType.takeIf { it == "FILE" }?.let {
-            { FileStorageGateway(fileConfiguration(it)) }
+            { FileStorageGateway(it.fileConfiguration()) }
         }
     }
 }

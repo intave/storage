@@ -12,7 +12,7 @@ class MongoDbStorageGatewayProvider : StorageGatewayProvider {
         storageType: String
     ): ((ConfigurationSection) -> ExpiringStorageGateway)? {
         return storageType.takeIf { it == "MONGODB" }?.let {
-            { MongoDbStorageGateway(mongoDbConfiguration(it)) }
+            { MongoDbStorageGateway(it.mongoDbConfiguration()) }
         }
     }
 }

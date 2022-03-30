@@ -12,7 +12,7 @@ class MariaDbStorageGatewayProvider : StorageGatewayProvider {
         storageType: String
     ): ((ConfigurationSection) -> ExpiringStorageGateway)? {
         return storageType.takeIf { it == "MARIADB" }?.let {
-            { MariaDbStorageGateway(mariaDbConfiguration(it)) }
+            { MariaDbStorageGateway(it.mariaDbConfiguration()) }
         }
     }
 }

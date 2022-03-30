@@ -21,19 +21,13 @@ data class PostgreSqlConfiguration(
 /**
  * Creates a [PostgreSqlConfiguration] from a [ConfigurationSection].
  *
- * @param config Section from the Bukkit configuration corresponding to the
- * [PostgreSqlConfiguration].
  * @return The [PostgreSqlConfiguration].
  */
-fun postgreSqlConfiguration(
-    config: ConfigurationSection
-): PostgreSqlConfiguration {
-    return with(config) {
-        PostgreSqlConfiguration(
-            "jdbc:postgresql://${string("host")}/${string("database")}",
-            string("user"),
-            string("password"),
-            getLong("expire")
-        )
-    }
+fun ConfigurationSection.postgreSqlConfiguration(): PostgreSqlConfiguration {
+    return PostgreSqlConfiguration(
+        "jdbc:postgresql://${string("host")}/${string("database")}",
+        string("user"),
+        string("password"),
+        getLong("expire")
+    )
 }

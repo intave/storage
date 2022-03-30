@@ -12,7 +12,7 @@ class MySqlStorageGatewayProvider : StorageGatewayProvider {
         storageType: String
     ): ((ConfigurationSection) -> ExpiringStorageGateway)? {
         return storageType.takeIf { it == "MYSQL" }?.let {
-            { MySqlStorageGateway(mySqlConfiguration(it)) }
+            { MySqlStorageGateway(it.mySqlConfiguration()) }
         }
     }
 }

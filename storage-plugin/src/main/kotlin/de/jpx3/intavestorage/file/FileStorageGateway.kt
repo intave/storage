@@ -58,10 +58,10 @@ class FileStorageGateway(private val config: FileConfiguration) : ExpiringStorag
         } else {
             System.getProperty("user.home") + "/.intave/storage/"
         }
-        val workDirectory = File(filePath)
-        if (!workDirectory.exists()) {
-            workDirectory.mkdir()
+        return File(filePath).apply {
+            if (!exists()) {
+                mkdir()
+            }
         }
-        return workDirectory
     }
 }

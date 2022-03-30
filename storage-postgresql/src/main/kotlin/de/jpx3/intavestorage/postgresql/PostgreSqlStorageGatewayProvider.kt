@@ -12,7 +12,7 @@ class PostgreSqlStorageGatewayProvider : StorageGatewayProvider {
         storageType: String
     ): ((ConfigurationSection) -> ExpiringStorageGateway)? {
         return storageType.takeIf { it == "POSTGRESQL" }?.let {
-            { PostgreSqlStorageGateway(postgreSqlConfiguration(it)) }
+            { PostgreSqlStorageGateway(it.postgreSqlConfiguration()) }
         }
     }
 }

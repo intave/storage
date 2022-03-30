@@ -30,30 +30,7 @@ class MongoDbStorageGateway(
             PojoCodecProvider.builder().automatic(true).build()
         )
     )
-    private val connectionSettings = if (config.authorization) {
-        val user = config.user!!
-        val password = config.password!!
-        val defaultDatabase = config.defaultDb!!
-
-        // Create the settings with credentials
-        MongoClientSettings.builder()
-            .uuidRepresentation(UuidRepresentation.STANDARD)
-            .codecRegistry(pojoCodecRegistry)
-            .credential(
-                MongoCredential.createCredential(
-                    user,
-                    defaultDatabase,
-                    password.toCharArray()
-                )
-            )
-            .build()
-    } else {
-        // Create the settings without credentials
-        MongoClientSettings.builder()
-            .uuidRepresentation(UuidRepresentation.STANDARD)
-            .codecRegistry(pojoCodecRegistry)
-            .build()
-    }
+    private val connectionSettings = createSettings()
     private val connection = MongoClients.create(connectionSettings)
     private val database = connection
         .getDatabase(config.database)
@@ -62,13 +39,43 @@ class MongoDbStorageGateway(
         .getCollection("storage")
         .withCodecRegistry(pojoCodecRegistry)
 
+    private fun createSettings(): MongoClientSettings {
+        return if (config.authorization) {
+            createSettingsWithAuthorization()
+        } else {
+            createSettingsWithoutAuthorization()
+        }
+    }
+
+    private fun createSettingsWithAuthorization(): MongoClientSettings {
+        val user = config.user!!
+        val password = config.password!!
+        val defaultDatabase = config.defaultDb!!
+
+        val mongoCredential = MongoCredential.createCredential(
+            user,
+            defaultDatabase,
+            password.toCharArray()
+        )
+        return MongoClientSettings.builder()
+            .uuidRepresentation(UuidRepresentation.STANDARD)
+            .codecRegistry(pojoCodecRegistry)
+            .credential(mongoCredential)
+            .build()
+    }
+
+    private fun createSettingsWithoutAuthorization(): MongoClientSettings {
+        return MongoClientSettings.builder()
+            .uuidRepresentation(UuidRepresentation.STANDARD)
+            .codecRegistry(pojoCodecRegistry)
+            .build()
+    }
+
     override fun clearOldEntries() {
+        val expirationThreshold = TimeUnit.DAYS.toMillis(config.expirationThreshold)
+        val expirationDelta = System.currentTimeMillis() - expirationThreshold
         storageCollection.deleteMany(
-            Filters.lt(
-                "last_used",
-                System.currentTimeMillis() -
-                    TimeUnit.DAYS.toMillis(config.expirationThreshold)
-            )
+            Filters.lt("last_used", expirationDelta)
         )
     }
 
@@ -76,50 +83,35 @@ class MongoDbStorageGateway(
         val emptyArray = ByteArray(0)
         // If no player is in the database return empty data
         val user = storageCollection.find(
-            Filters.eq(
-                "player",
-                uuid
-            )
+            Filters.eq("player", uuid)
         ).first() ?: run {
             consumer.accept(ByteBuffer.wrap(emptyArray))
             return
         }
+
         // Fetch the binary data of the player
-        val binary = user.get(
-            "data",
-            Binary::class.java
-        )
+        val binary = user.get("data", Binary::class.java)
         consumer.accept(ByteBuffer.wrap(binary.data))
     }
 
     override fun saveStorage(uuid: UUID, buffer: ByteBuffer) {
-        // If no player is in the database insert a new one
         val requiresInsert = storageCollection.find(
-            Filters.eq(
-                "player",
-                uuid
-            )
+            Filters.eq("player", uuid)
         ).first() == null
+
+        // If no player is in the database, insert a new one
         if (requiresInsert) {
-            storageCollection.insertOne(
-                Document(
-                    hashMapOf<String, Any>(
-                        "player" to uuid,
-                        "data" to buffer.array(),
-                        "last_used" to System.currentTimeMillis()
-                    )
-                )
+            val playerData = hashMapOf<String, Any>(
+                "player" to uuid,
+                "data" to buffer.array(),
+                "last_used" to System.currentTimeMillis()
             )
+            val document = Document(playerData)
+            storageCollection.insertOne(document)
         } else {
             storageCollection.updateOne(
-                Filters.eq(
-                    "player",
-                    uuid
-                ),
-                Updates.set(
-                    "data",
-                    buffer.array()
-                )
+                Filters.eq("player", uuid),
+                Updates.set("data", buffer.array())
             )
         }
     }

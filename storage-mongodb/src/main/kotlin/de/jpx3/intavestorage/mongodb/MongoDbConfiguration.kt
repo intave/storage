@@ -29,20 +29,16 @@ data class MongoDbConfiguration(
 /**
  * Creates a [MongoDbConfiguration] from a [ConfigurationSection].
  *
- * @param config Section from the Bukkit configuration corresponding to the
- * [MongoDbConfiguration].
  * @return The [MongoDbConfiguration].
  */
-fun mongoDbConfiguration(config: ConfigurationSection): MongoDbConfiguration {
-    return with(config) {
-        MongoDbConfiguration(
-            string("host"),
-            string("database"),
-            getBoolean("authorization"),
-            getString("user"),
-            getString("password"),
-            getString("defaultdb"),
-            getLong("expire")
-        )
-    }
+fun ConfigurationSection.mongoDbConfiguration(): MongoDbConfiguration {
+    return MongoDbConfiguration(
+        string("host"),
+        string("database"),
+        getBoolean("authorization"),
+        getString("user"),
+        getString("password"),
+        getString("defaultdb"),
+        getLong("expire")
+    )
 }

@@ -21,17 +21,13 @@ data class MariaDbConfiguration(
 /**
  * Creates a [MariaDbConfiguration] from a [ConfigurationSection].
  *
- * @param config Section from the Bukkit configuration corresponding to the
- * [MariaDbConfiguration].
  * @return The [MariaDbConfiguration].
  */
-fun mariaDbConfiguration(config: ConfigurationSection): MariaDbConfiguration {
-    return with(config) {
-        MariaDbConfiguration(
-            "jdbc:mariadb://${string("host")}/${string("database")}",
-            string("user"),
-            string("password"),
-            getLong("expire")
-        )
-    }
+fun ConfigurationSection.mariaDbConfiguration(): MariaDbConfiguration {
+    return MariaDbConfiguration(
+        "jdbc:mariadb://${string("host")}/${string("database")}",
+        string("user"),
+        string("password"),
+        getLong("expire")
+    )
 }
