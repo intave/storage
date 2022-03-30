@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "de.jpx3"
-version = "0.4.0"
+version = "0.4.1"
 
 allprojects {
     apply(plugin = "org.jetbrains.kotlin.jvm")

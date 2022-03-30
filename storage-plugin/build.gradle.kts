@@ -7,7 +7,7 @@ bukkit {
     main = "de.jpx3.intavestorage.BukkitEntrypoint"
     version = "${rootProject.version}"
 
-    depend = listOf("Intave")
+    softDepend = listOf("Intave", "IntaveBootstrap")
 }
 
 tasks {
