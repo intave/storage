@@ -19,6 +19,16 @@ allprojects {
         compileOnly("org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT")
         compileOnly(fileTree("${rootProject.projectDir}/libs/") { include("*.jar") })
     }
+
+    tasks {
+        build {
+            dependsOn(shadowJar)
+        }
+
+        shadowJar {
+            mergeServiceFiles()
+        }
+    }
 }
 
 dependencies {
@@ -27,10 +37,4 @@ dependencies {
     implementation(project(":storage-mysql"))
     implementation(project(":storage-plugin"))
     implementation(project(":storage-postgresql"))
-}
-
-tasks {
-    build {
-        dependsOn(shadowJar)
-    }
 }
