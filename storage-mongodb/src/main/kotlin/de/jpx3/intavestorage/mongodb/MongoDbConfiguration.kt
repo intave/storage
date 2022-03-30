@@ -1,5 +1,6 @@
 package de.jpx3.intavestorage.mongodb
 
+import de.jpx3.intavestorage.string
 import org.bukkit.configuration.ConfigurationSection
 
 /**
@@ -44,8 +45,4 @@ fun mongoDbConfiguration(config: ConfigurationSection): MongoDbConfiguration {
             getLong("expire")
         )
     }
-}
-
-fun ConfigurationSection.string(path: String): String {
-    return this.getString(path) ?: error("")
 }
