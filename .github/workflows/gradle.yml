@@ -18,7 +18,13 @@ jobs:
           arguments: build
           gradle-version: wrapper
       - name: Upload artifact
-        uses: actions/upload-artifact@v2-preview
+        uses: actions/upload-artifact@v3
         with:
           name: intave-storage
-          path: build/libs/*-all.jar
+          path: |
+            ./build/libs/*-all.jar
+            ./*/build/libs/*-mariadb.jar
+            ./*/build/libs/*-mongodb.jar
+            ./*/build/libs/*-mysql.jar
+            ./*/build/libs/*-file.jar
+            ./*/build/libs/*-postgresql.jar
