@@ -20,7 +20,10 @@ class IntaveStorage(private val classLoader: ClassLoader) {
             intave().setStorageGateway(EmptyStorageGateway())
         } ?: run {
             val configSectionName = storageType.lowercase(Locale.getDefault())
-            error("Configuration section '$configSectionName' not found!")
+            error(
+                "Configuration section '$configSectionName' not found!" +
+                    "Configuration file broken?"
+            )
         }
     }
 
@@ -54,7 +57,10 @@ class IntaveStorage(private val classLoader: ClassLoader) {
         val serviceLoader = storageGatewayProviderLoader(classLoader)
         return serviceLoader.firstNotNullOfOrNull {
             it.storageGatewayFor(storageType)
-        } ?: error("Storage gateway provider for '$storageType' not found!")
+        } ?: error(
+            "Storage gateway provider for '$storageType' not found!" +
+                "Implementation not present in plugin?"
+        )
     }
 
     /**

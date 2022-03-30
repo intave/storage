@@ -9,6 +9,11 @@ import java.util.UUID
 import java.util.concurrent.TimeUnit
 import java.util.function.Consumer
 
+/**
+ * Storage gateway between Intave and the file system.
+ *
+ * @property config The [FileConfiguration].
+ */
 class FileStorageGateway(private val config: FileConfiguration) : ExpiringStorageGateway {
     override fun requestStorage(id: UUID, consumer: Consumer<ByteBuffer>) {
         val file = fileOf(id)
