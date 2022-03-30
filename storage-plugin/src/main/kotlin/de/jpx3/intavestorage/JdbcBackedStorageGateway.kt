@@ -53,8 +53,11 @@ interface JdbcBackedStorageGateway : ExpiringStorageGateway {
     fun saveStorageQuery(): PreparedStatement
 
     override fun clearOldEntries() {
+        val expirationThreshold = expirationThreshold().takeIf {
+            it >= 0
+        } ?: return
         clearEntriesQuery().use {
-            it.setLong(1, System.currentTimeMillis() - expirationThreshold())
+            it.setLong(1, System.currentTimeMillis() - expirationThreshold)
             it.execute()
         }
     }

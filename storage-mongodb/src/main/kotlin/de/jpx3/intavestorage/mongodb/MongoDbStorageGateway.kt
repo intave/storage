@@ -73,6 +73,9 @@ class MongoDbStorageGateway(
 
     override fun clearOldEntries() {
         val expirationThreshold = TimeUnit.DAYS.toMillis(config.expirationThreshold)
+        if (expirationThreshold < 0) {
+            return
+        }
         val expirationDelta = System.currentTimeMillis() - expirationThreshold
         storageCollection.deleteMany(
             Filters.lt("last_used", expirationDelta)

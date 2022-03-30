@@ -44,6 +44,9 @@ class FileStorageGateway(private val config: FileConfiguration) : ExpiringStorag
 
     override fun clearOldEntries() {
         val expirationThreshold = TimeUnit.DAYS.toMillis(config.expire)
+        if (expirationThreshold < 0) {
+            return
+        }
         cacheFile()
             .walkTopDown()
             .filter { file -> file.isFile && file.name.endsWith(".storage") }
