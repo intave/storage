@@ -49,10 +49,10 @@ class MySqlStorageGateway(
         return connection.prepareStatement(
             """
             INSERT INTO intave_storage
-            VALUES(?, ?, ?) as excluded
+            VALUES(?, ?, ?)
             ON DUPLICATE KEY UPDATE 
-                data = excluded.data,
-                last_used = excluded.last_used
+                data = VALUES(data),
+                last_used = VALUES(last_used)
             """
         )
     }
