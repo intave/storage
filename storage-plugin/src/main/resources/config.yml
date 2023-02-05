@@ -30,6 +30,9 @@ postgresql:
   host: localhost
   # Which database should we connect to?
   database: testing
+  # Which schema should we use?
+  # Default: public
+  schema: public
   # Which user should we use to connect to the DBMS?
   user: user
   # Which password should we use to connect to the DBMS?

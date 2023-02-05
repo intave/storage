@@ -25,7 +25,7 @@ data class PostgreSqlConfiguration(
  */
 fun ConfigurationSection.postgreSqlConfiguration(): PostgreSqlConfiguration {
     return PostgreSqlConfiguration(
-        "jdbc:postgresql://${string("host")}/${string("database")}",
+        "jdbc:postgresql://${string("host")}/${string("database")}?currentSchema=${string("schema")}",
         string("user"),
         string("password"),
         getLong("expire")
