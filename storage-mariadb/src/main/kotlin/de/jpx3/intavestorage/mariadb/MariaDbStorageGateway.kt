@@ -2,6 +2,7 @@ package de.jpx3.intavestorage.mariadb
 
 import de.jpx3.intavestorage.JdbcBackedStorageGateway
 import org.mariadb.jdbc.Driver
+import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.PreparedStatement
 import java.util.concurrent.TimeUnit
@@ -14,13 +15,17 @@ import java.util.concurrent.TimeUnit
 class MariaDbStorageGateway(
     private val config: MariaDbConfiguration
 ) : JdbcBackedStorageGateway {
-    private val connection by lazy {
+    private var connection = run {
         DriverManager.registerDriver(Driver())
         DriverManager.getConnection(config.uri, config.user, config.password)
     }
 
     init {
         prepareTable()
+    }
+
+    override fun reconnect() {
+        connection = DriverManager.getConnection(config.uri, config.user, config.password)
     }
 
     override fun prepareTable() {

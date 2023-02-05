@@ -1,7 +1,9 @@
 package de.jpx3.intavestorage
 
 import java.nio.ByteBuffer
+import java.sql.Connection
 import java.sql.PreparedStatement
+import java.sql.SQLException
 import java.util.UUID
 import java.util.function.Consumer
 
@@ -10,6 +12,8 @@ import java.util.function.Consumer
  * gateway implementations.
  */
 interface JdbcBackedStorageGateway : ExpiringStorageGateway {
+    fun reconnect()
+
     /**
      * Creates the table required by this plugin if it does not exist. Should be
      * called after establishing a connection with the database.
@@ -17,7 +21,12 @@ interface JdbcBackedStorageGateway : ExpiringStorageGateway {
     fun prepareTable()
 
     override fun requestStorage(id: UUID, lazyReturn: Consumer<ByteBuffer>) {
-        requestStorageQuery().use {
+        try {
+            requestStorageQuery()
+        } catch (e: SQLException) {
+            reconnect()
+            requestStorageQuery()
+        }.use {
             it.setString(1, id.toString())
             val result = it.executeQuery()
             val bytes = if (result.next()) {
@@ -37,7 +46,12 @@ interface JdbcBackedStorageGateway : ExpiringStorageGateway {
     fun requestStorageQuery(): PreparedStatement
 
     override fun saveStorage(id: UUID, storage: ByteBuffer) {
-        saveStorageQuery().use {
+        try {
+            saveStorageQuery()
+        } catch (e: SQLException) {
+            reconnect()
+            saveStorageQuery()
+        }.use {
             it.setString(1, id.toString())
             it.setBytes(2, storage.array())
             it.setLong(3, System.currentTimeMillis())
@@ -56,7 +70,12 @@ interface JdbcBackedStorageGateway : ExpiringStorageGateway {
         val expirationThreshold = expirationThreshold().takeIf {
             it >= 0
         } ?: return
-        clearEntriesQuery().use {
+        try {
+            clearEntriesQuery()
+        } catch (e: SQLException) {
+            reconnect()
+            clearEntriesQuery()
+        }.use {
             it.setLong(1, System.currentTimeMillis() - expirationThreshold)
             it.execute()
         }
