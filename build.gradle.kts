@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.6.10"
+    kotlin("jvm") version "1.8.10"
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
@@ -16,7 +16,7 @@ allprojects {
     }
 
     dependencies {
-        compileOnly("org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT")
+        compileOnly("org.spigotmc:spigot-api:1.19.3-R0.1-SNAPSHOT")
         compileOnly(fileTree("${rootProject.projectDir}/libs/") { include("*.jar") })
     }
 

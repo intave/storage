@@ -1,6 +1,6 @@
 dependencies {
     implementation(project(":storage-plugin"))
-    implementation("org.postgresql:postgresql:42.3.3")
+    implementation("org.postgresql:postgresql:42.3.8")
 }
 
 tasks {
