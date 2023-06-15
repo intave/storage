@@ -1,5 +1,6 @@
 package de.jpx3.intavestorage.mongodb
 
+import com.mongodb.ConnectionString
 import com.mongodb.MongoClientSettings
 import com.mongodb.MongoCredential
 import com.mongodb.client.MongoClients
@@ -58,6 +59,7 @@ class MongoDbStorageGateway(
             password.toCharArray()
         )
         return MongoClientSettings.builder()
+            .applyConnectionString(ConnectionString("mongodb://${config.host}"))
             .uuidRepresentation(UuidRepresentation.STANDARD)
             .codecRegistry(pojoCodecRegistry)
             .credential(mongoCredential)
@@ -66,6 +68,7 @@ class MongoDbStorageGateway(
 
     private fun createSettingsWithoutAuthorization(): MongoClientSettings {
         return MongoClientSettings.builder()
+            .applyConnectionString(ConnectionString("mongodb://${config.host}"))
             .uuidRepresentation(UuidRepresentation.STANDARD)
             .codecRegistry(pojoCodecRegistry)
             .build()
