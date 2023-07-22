@@ -32,7 +32,7 @@ class PostgreSqlStorageGateway(
     override fun prepareTable() {
         connection.createStatement().execute(
             """
-            CREATE TABLE IF NOT EXISTS intave_storage(
+            CREATE TABLE IF NOT EXISTS "${config.schema}".intave_storage(
                 id CHAR(36) PRIMARY KEY NOT NULL,
                 data BYTEA NOT NULL,
                 last_used BIGINT NOT NULL
@@ -45,7 +45,7 @@ class PostgreSqlStorageGateway(
         return connection.prepareStatement(
             """
             SELECT data
-            FROM intave_storage
+            FROM "${config.schema}".intave_storage
             WHERE id = ?
             """
         )
@@ -54,7 +54,7 @@ class PostgreSqlStorageGateway(
     override fun saveStorageQuery(): PreparedStatement {
         return connection.prepareStatement(
             """
-            INSERT INTO intave_storage
+            INSERT INTO "${config.schema}".intave_storage
             VALUES(?, ?, ?)
             ON CONFLICT(id) DO UPDATE SET
                 data = EXCLUDED.data,
@@ -66,7 +66,7 @@ class PostgreSqlStorageGateway(
     override fun clearEntriesQuery(): PreparedStatement {
         return connection.prepareStatement(
             """
-            DELETE FROM intave_storage
+            DELETE FROM "${config.schema}".intave_storage
             WHERE last_used < ?
             """
         )
