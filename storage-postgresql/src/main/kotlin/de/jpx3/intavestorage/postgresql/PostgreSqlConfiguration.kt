@@ -15,7 +15,8 @@ data class PostgreSqlConfiguration(
     val uri: String,
     val user: String,
     val password: String,
-    val expirationThreshold: Long
+    val expirationThreshold: Long,
+    val schema: String
 )
 
 /**
@@ -25,9 +26,10 @@ data class PostgreSqlConfiguration(
  */
 fun ConfigurationSection.postgreSqlConfiguration(): PostgreSqlConfiguration {
     return PostgreSqlConfiguration(
-        "jdbc:postgresql://${string("host")}/${string("database")}?currentSchema=${string("schema")}",
+        "jdbc:postgresql://${string("host")}/${string("database")}",
         string("user"),
         string("password"),
-        getLong("expire")
+        getLong("expire"),
+        string("schema")
     )
 }
